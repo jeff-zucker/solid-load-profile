@@ -56,6 +56,10 @@ Loads into the UI.store all of the required parts of a full Solid Profile that t
 }
 ```
 
+## profile.structure
+
+The default context returned from profile.loadFullProfile() is an object containing named nodes. In some cases the app may want URL strings instead of named nodes.  After profile.loadFullProfile() is called profile.structure will return the same context object but with strings instead of named nodes.
+
 ## getProperty()
 
 Once the full profile is loaded, the getProperty() method can be called to retrieve specific information not contained in the context returned from the loadFullProfile() method.  For example:

@@ -8,6 +8,7 @@
 export class LoadProfile {
 
   loadFullProfile = async function(webid){
+webid = UI.rdf.sym("https://jeff-zucker.solidcommunity.net/profile/card#me");
     let loggedIn = UI.authn.currentUser();
     let isOwner = loggedIn && loggedIn.value === webid.value || webid;
     let context = {me:UI.rdf.sym(webid)};
@@ -29,7 +30,27 @@ export class LoadProfile {
     context.inbox = this.inbox();
     context.issuers = this.issuers();
     context.storages = this.storages();
+    this.context=context;
     return context;
+  }
+
+  structure(){
+    let all = {};
+    for(let contextKey of Object.keys(this.context)){
+      let current = this.context[contextKey];
+      all[contextKey] = current.value;
+    }
+    all.issuers = this.getValues('solid:oidcIssuer');
+    all.extendedDocs = this.getValues('rdfs:seeAlso');
+    all.storages = this.getValues('space:storage');
+    all.inbox = this.getProperty('ldp:inbox').value;
+    all.index = {
+      public : this.getProperty('solid:publicTypeIndex').value,
+      private : this.getProperty('solid:priavateTypeIndex').value
+    };
+    all.registrations = this.registrations(true);
+    all.registrations = this.registrations(true);
+    return all;
   }
 
   async tryLoad(url){
@@ -65,7 +86,7 @@ export class LoadProfile {
   inbox = function(){
     return this.getProperty('ldp:inbox');
   }
-  registrations = function(){
+  registrations = function(values){
     let registrations = {};
     let isa = UI.ns.rdf('type');
     let reg = UI.ns.solid('TypeRegistration');
@@ -75,11 +96,21 @@ export class LoadProfile {
       registrations[forClass]||={};
       for(let o of UI.store.match(s.subject,UI.ns.solid('instance'))){
         registrations[forClass]['instances'] ||= [];
-        registrations[forClass]['instances'].push( o.object );
+        if(values){
+          registrations[forClass]['instances'].push( o.object.value );
+        }
+        else {
+          registrations[forClass]['instances'].push( o.object );
+        }
       }
       for(let c of UI.store.match(s.subject,UI.ns.solid('instanceContainer'))){
         registrations[forClass]['containers'] ||= [];
-        registrations[forClass]['containers'].push( c.object );
+        if(values){
+          registrations[forClass]['containers'].push( c.object.value );
+        }
+        else {
+          registrations[forClass]['containers'].push( c.object );
+        }
       }
     }
     return registrations;

@@ -21,6 +21,7 @@ async function showInfrastructure(webid){
   let context = await profile.loadFullProfile(webid);
   context = "<pre>"+ JSON.stringify(context,null,4)+"</pre>";
   let name = profile.getProperty('foaf:name');
+  document.getElementById('results').innerHTML = "";
   document.getElementById('results').innerHTML = name + context;
 }
 
