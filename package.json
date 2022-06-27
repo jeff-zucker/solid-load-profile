@@ -1,0 +1,15 @@
+{
+  "name": "loadprofile",
+  "version": "1.0.0",
+  "description": "loads a full Solid profile and provides methods to access it",
+  "main": "src/loadProfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jeff Zucker",
+  "license": "MIT",
+  "dependencies": {
+    "solid-ui": "^2.4.22"
+  }
+}

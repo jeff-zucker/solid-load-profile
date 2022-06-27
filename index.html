@@ -1,0 +1,66 @@
+<body>
+<style>
+input,button {padding:1em;}
+</style>
+Enter a webid to explore : <input id="webid" value="https://jeff-zucker.solidcommunity.net/profile/card#me" style="width:50em" /> <button onclick="go">go</button><br />
+  <div id="login"></div> (try without logging-in first!)
+  <div id="results">Loading ...</div>
+ 
+<script src="./node_modules/solid-ui/dist/main.js"></script>
+<script type="module">
+
+import {LoadProfile} from './src/loadProfile.js';
+
+async function showInfrastructure(webid){
+  let profile = new LoadProfile();
+  let context = await profile.loadFullProfile(webid);
+  context = "<pre>"+ JSON.stringify(context,null,4)+"</pre>";
+  let name = profile.getProperty('foaf:name');
+  document.getElementById('results').innerHTML = name + context;
+}
+
+function init(){
+  let defaultUser;
+  let webid = UI.authn.currentUser();
+  if(webid){
+    document.getElementById("webid").value=webid;
+    defaultUser = document.getElementById("webid");
+  }
+  else defaultUser = document.getElementById("webid");
+  showInfrastructure( UI.authn.currentUser() || defaultUser );
+}
+
+function go(){
+  showInfrastructure( document.getElementById("webid" ) );
+}
+
+    const authSession = UI.authn.authSession
+    const loginButtonArea = document.getElementById("login");
+    async function mungeLoginArea(){
+      loginButtonArea.innerHTML="";
+      loginButtonArea.appendChild(UI.login.loginStatusBox(document, null, {}))
+      const signupButton = loginButtonArea.querySelectorAll('input')[1];
+      if(signupButton) signupButton.style.display="none";
+      const me = await UI.authn.checkUser();
+      const button = loginButtonArea.querySelector('input');         
+      if (me) {       
+       loginButtonArea.style.display="inline-block";
+        button.value = "Log out!";           
+        button.title = me.value;
+      }
+      else {
+       loginButtonArea.style.display="inline-block";
+        button.value = "Log in!";           
+        button.title = "";
+      }
+      init();
+    }      
+    if (authSession) {
+      authSession.onLogin(()=>{mungeLoginArea()});
+      authSession.onLogout(()=>{console.log("");mungeLoginArea()});
+      authSession.onSessionRestore(mungeLoginArea);
+    }    
+    mungeLoginArea();
+
+</script>
+
