@@ -1,14 +1,12 @@
 /*
  * loadFullProfile
  *   if !owner - load webid doc & public index & public seeAlsos
- *   if owner && !isFixerApp - load webid doc, prefs, indexes, seeAlsos
- *   if owner && isFixerApp - same but create missing infrastructure
- * note : always succeeds, always returns maximum user/app has access to
+ *   if owner - load webid doc, prefs, indexes, seeAlsos
+ *   always succeeds, always returns maximum user/app has access to
 */
 export class LoadProfile {
 
   loadFullProfile = async function(webid){
-webid = UI.rdf.sym("https://jeff-zucker.solidcommunity.net/profile/card#me");
     let loggedIn = UI.authn.currentUser();
     let isOwner = loggedIn && loggedIn.value === webid.value || webid;
     let context = {me:UI.rdf.sym(webid)};
