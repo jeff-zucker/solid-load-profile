@@ -1,68 +1,42 @@
 <body>
-
-<style>
-input,button {padding:1em;}
-</style>
-Enter a webid to explore : <input id="webid" value="https://jeff-zucker.solidcommunity.net/profile/card#me" style="width:50em" /> <button id="goButton">go</button><br />
-  <div id="login"></div> (try without logging-in first!)
+  
+  <p>
+    This is a demo of <b><a href="https://github.com/jeff-zucker/solid-load-profile">loadProfile</a></b> 
+    a tiny library for loading a Solid profile into a simple Javascript object.  No login required.
+  </p>
+  <input id="webid" placeholder="enter a webID e.g. https://YOU.solidcommunity.net/profile/card#me">
+  <button>go</button>
   <div id="results"></div>
- 
-<script src="./main.js"></script>
-<script type="module">
 
-import {LoadProfile} from './src/loadProfile.js';
+  <script type="module">
+    import './loadProfile-cdn.js';                    /* or ./loadProfile-local.js if running locally */
+    import {loadProfile} from './solid-load-profile.js';
+    async function showProfile(webid){
+      resultsArea.innerHTML="Loading profile ...";
+      const profile = await loadProfile(webid);
+      const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
+      resultsArea.innerHTML = profileString + note;
+    }
 
-document.getElementById('goButton').addEventListener('click',(e)=>{
-  showInfrastructure( document.getElementById("webid" ) );
-});
+    const resultsArea = document.getElementById('results');
+    const webidInput = document.querySelector('#webid');
+    const button = document.querySelector('button');
 
-async function showInfrastructure(webid){
-  let profile = new LoadProfile();
-  let context = await profile.loadFullProfile(webid);
-  context = "<pre>"+ JSON.stringify(context,null,4)+"</pre>";
-  let name = profile.getProperty('foaf:name');
-  document.getElementById('results').innerHTML = "";
-  document.getElementById('results').innerHTML = name + context;
-}
-
-function init(){
-  let defaultUser;
-  let webid = UI.authn.currentUser();
-  if(webid){
-    document.getElementById("webid").value=webid;
-    defaultUser = document.getElementById("webid");
-  }
-  else defaultUser = document.getElementById("webid");
-//  showInfrastructure( UI.authn.currentUser() || defaultUser );
-}
-
-    const authSession = UI.authn.authSession
-    const loginButtonArea = document.getElementById("login");
-    async function mungeLoginArea(){
-      loginButtonArea.innerHTML="";
-      loginButtonArea.appendChild(UI.login.loginStatusBox(document, null, {}))
-      const signupButton = loginButtonArea.querySelectorAll('input')[1];
-      if(signupButton) signupButton.style.display="none";
-      const me = await UI.authn.checkUser();
-      const button = loginButtonArea.querySelector('input');         
-      if (me) {       
-       loginButtonArea.style.display="inline-block";
-        button.value = "Log out!";           
-        button.title = me.value;
+    webidInput.addEventListener('keypress', (e) => {    
+      if (e.key === 'Enter') {
+        showProfile( webidInput.value );
       }
-      else {
-       loginButtonArea.style.display="inline-block";
-        button.value = "Log in!";           
-        button.title = "";
-      }
-      init();
-    }      
-    if (authSession) {
-      authSession.onLogin(()=>{mungeLoginArea()});
-      authSession.onLogout(()=>{console.log("");mungeLoginArea()});
-      authSession.onSessionRestore(mungeLoginArea);
-    }    
-    mungeLoginArea();
-
-</script>
-
+    });
+    button.addEventListener('click', () => {
+      showProfile( webidInput.value );
+    });
+    const note = `
+    `;
+  </script>
+  <style>
+    * { font-family:Verdana,Arial,Helvetica; font-size:1.1rem; }
+    p { width:60ch; } 
+    input { width:50ch; padding:0.25rem; radius:0.5rem; margin:1rem}
+    button { radius:0.5rem; margin:1rem}
+  </style>
+</body>

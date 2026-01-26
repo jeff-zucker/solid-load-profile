@@ -1,16 +1,19 @@
 {
-  "name": "solid-load-profile",
-  "version": "1.0.0",
-  "description": "loads a full Solid profile and provides methods to access it",
-  "main": "src/loadProfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
+  "name": "loadprofile",
+  "version": "2.0.0",
+  "description": "loads a full Solid profile into a simple Javascript array",
+  "type": "module",
+  "main": "./solid-load-profile.js",
+  "keywords": [
+    "Solid Project",
+    "profile",
+    "webID document"
+  ],
   "author": "Jeff Zucker",
   "license": "MIT",
   "dependencies": {
-    "loadprofile": "github:jeff-zucker/solid-load-profile",
-    "solid-ui": "^2.4.22"
+    "rdflib": "^2.3.5",
+    "solid-logic": "^4.0.2",
+    "solid-ui": "^3.0.3"
   }
 }
