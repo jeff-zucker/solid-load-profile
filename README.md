@@ -1,20 +1,19 @@
 # loadProfile
 
-loads a full Solid profile and provides methods to access it
+loads a full Solid profile into a simple Javascript array
 
-## loadFullProfile()
+## loadFProfile()
 
 Loads all of the required parts of a full Solid Profile that the current user and app have access to.  Returns a Javascript object containing full information on the user's inbox, oidcIssuers, storages, type registrations, locations of all profile documents, and all other information in the full profile.  The object will look something like this:
 ```javascript
 {
     "webid": "https://jeff-zucker.solidcommunity.net/profile/card#me",
-    "webid document": "https://jeff-zucker.solidcommunity.net/profile/card",
-    "storages": [
+    "pim:storage": [
         "https://jeff-zucker.solidcommunity.net:8443/",
         "https://jeff-zucker.solidcommunity.net/",
         "https://jeffzucker.inrupt.net/",
     ]
-    "extendedDocs": [
+    "rdfs:seAlso": [
        "https://jeff-zucker.solidcommunity.net/profile/mySeeAlso1.ttl"
        "https://jeff-zucker.solidcommunity.net/profile/mySeeAlso2.ttl"
     ],
@@ -28,11 +27,11 @@ A full Solid Profile includes all triples in the WebID document and extended pro
 
 This library loads all triples from these documents:
 * the WebID document
+* the preferences file   (if logged in and with permission)
 * all documents pointed from the WebID document using rdfs:seeAlso or foaf:primaryTopicOf
 * all documents pointed to from any of the above documents using rdfs:seeAlso
 * the public type index
 * the private type index (if logged in and with permission)
-* the preferences file   (if logged in and with permission)
 
 This method of loading should accomodate situations in which 
 * the WebID document is or is not located on a Solid Server
