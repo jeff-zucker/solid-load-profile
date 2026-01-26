@@ -1,4 +1,4 @@
-# loadProfile
+# solid-load-profile
 
 loads a full Solid profile into a simple Javascript array
 
@@ -51,12 +51,13 @@ This library looks for two levels of seeAlsos to handle this, but does not recur
     import './loadProfile-cdn.js';  // or loadProfile-local.js if running locally
     import {loadProfile} from './src/loadProfile.js';
 
-    async function showInfrastructure(webid){
+    async function showProfile(webid){
         let profile = await loadProfile();
         let name = profile.name;
         const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
         document.getElementById('results').innerHTML = name + profileString;
     }
+	showProfile(<ANY-WEBID-HERE>);
 </script>
 ```
 
