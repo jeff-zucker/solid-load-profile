@@ -1,0 +1,45 @@
+<body><div id="app">
+  
+  <p>
+    This is a demo of <b><a href="https://github.com/jeff-zucker/solid-load-profile" target="_BLANK">solid-load-profile</a></b> 
+    a small library that loads a full Solid profile, including all extended profile documents, into a simple Javascript object.  No login required for the demo.
+  </p>
+  <p>
+    <b>Note:</b> If your profile does not show up as you expect it to, please message me (<i>@jeff-zucker:matrix.org</i>) or <a href="https://github.com/jeff-zucker/solid-load-profile/issues" target="_BLANK">post an issue</a> giving your webid and a description of what happened that you didn't expect.
+  </p>
+  <input id="webid" placeholder="enter a webID e.g. https://YOU.solidcommunity.net/profile/card#me">
+  <button>go</button>
+  <div id="results"></div>
+
+  <script type="module">
+    import {loadProfile} from './solid-load-profile.js';
+    async function showProfile(webid){
+      resultsArea.innerHTML="Loading profile ...";
+      const profile = await loadProfile(webid);
+      const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
+      resultsArea.innerHTML = profileString + note;
+    }
+
+    const resultsArea = document.getElementById('results');
+    const webidInput = document.querySelector('#webid');
+    const button = document.querySelector('button');
+
+    webidInput.addEventListener('keypress', (e) => {    
+      if (e.key === 'Enter') {
+        showProfile( webidInput.value );
+      }
+    });
+    button.addEventListener('click', () => {
+      showProfile( webidInput.value );
+    });
+    const note = `
+    `;
+  </script>
+  <style>
+    * { font-family:Arial,Helvetica; font-size:1.1rem; }
+    p { width:60ch; } 
+    input { width:60ch; padding:0.25rem; radius:0.5rem; margin:1rem}
+    button { radius:0.5rem; margin:1rem}
+    #app { display:block; margin:auto; margin-top:1rem; }
+  </style>
+</div></body>

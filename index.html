@@ -1,41 +1,550 @@
-<body>
-  
-  <p>
-    This is a demo of <b><a href="https://github.com/jeff-zucker/solid-load-profile">solid-load-profile</a></b> 
-    a small library that loads a full Solid profile, including all extended profile documents, into a simple Javascript object.  No login required for the demo.
-  </p>
-  <input id="webid" placeholder="enter a webID e.g. https://YOU.solidcommunity.net/profile/card#me">
-  <button>go</button>
-  <div id="results"></div>
+<div id="app">
+  <header>
+    <h3>State of the Solid WebID Profile - 2026-01-27</h3>
 
-  <script type="module">
-    import {loadProfile} from './solid-load-profile.js';
-    async function showProfile(webid){
-      resultsArea.innerHTML="Loading profile ...";
-      const profile = await loadProfile(webid);
-      const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
-      resultsArea.innerHTML = profileString + note;
+    <p>
+      I gathered WebIDs from the <a href="https://solidproject.solidcommunity.net/catalog/" target="_BLANK">Solid Resources Catlaog</a>,
+      loaded the full profiles assoiated with them and analyzed them using <a href="https://github.com/jeff-zucker/solid-load-profile" target="_BLANK"> solid-load-profile </a>. 
+      Here are the general stats.  Click on the buttons below to see more details or to see 
+      how this library interprets your own webID Profile.
+    </p>
+
+    <pre>
+      330 total people in the Catalog 
+       95 listed WebIDs
+       50 unavailable - defunct host (inrupt.net)
+        8 unavailable - CORS issues
+        5 unavailable - 401, 404, expired cert
+       32 available
+    </pre>
+
+    <div class="button-bar">  
+      <button class="predicates"> Predicates </button>
+      <button class="issuers"> Issuers </button>
+      <button class="types"> Type Registrations </button>
+      <button class="mine"> Your Profile </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="display-area" id="predicates"><pre>
+[
+    {
+        "webid": 32
+    },
+    {
+        "rdf:type": 31
+    },
+    {
+        "solid:publicTypeIndex": 30
+    },
+    {
+        "solid:oidcIssuer": 29
+    },
+    {
+        "space:storage": 28
+    },
+    {
+        "ldp:inbox": 28
+    },
+    {
+        "foaf:name": 28
+    },
+    {
+        "space:preferencesFile": 28
+    },
+    {
+        "solid:privateTypeIndex": 25
+    },
+    {
+        "vcard:fn": 23
+    },
+    {
+        "acl:trustedApp": 22
+    },
+    {
+        "foaf:knows": 20
+    },
+    {
+        "solid:account": 20
+    },
+    {
+        "solid:typeRegistration": 19
+    },
+    {
+        "vcard:hasPhoto": 16
+    },
+    {
+        "vcard:role": 13
+    },
+    {
+        "vcard:organization-name": 12
+    },
+    {
+        "vcard:hasEmail": 11
+    },
+    {
+        "vcard:note": 11
+    },
+    {
+        "foaf:account": 9
+    },
+    {
+        "foaf:img": 9
+    },
+    {
+        "schema:knowsLanguage": 8
+    },
+    {
+        "foaf:familyName": 7
+    },
+    {
+        "foaf:givenName": 7
+    },
+    {
+        "foaf:homepage": 7
+    },
+    {
+        "vcard:hasAddress": 7
+    },
+    {
+        "foaf:mbox": 6
+    },
+    {
+        "foaf:nick": 6
+    },
+    {
+        "owl:sameAs": 6
+    },
+    {
+        "solid:profileBackgroundColor": 5
+    },
+    {
+        "solid:oidcIssuerRegistrationToken": 5
+    },
+    {
+        "rdfs:seeAlso": 4
+    },
+    {
+        "cert:key": 4
+p    },
+    {
+        "foaf:weblog": 4
+    },
+    {
+        "vcard:bday": 4
+    },
+    {
+        "vcard:hasTelephone": 4
+    },
+    {
+        "solid:preferredObjectPronoun": 4
+    },
+    {
+        "solid:preferredSubjectPronoun": 4
+    },
+    {
+        "solid:profileHighlightColor": 4
+    },
+    {
+        "rdfs:label": 3
+    },
+    {
+        "foaf:interest": 3
+    },
+    {
+        "foaf:made": 3
+    },
+    {
+        "foaf:publications": 3
+    },
+    {
+        "activitystreams:outbox": 3
+    },
+    {
+        "solid:preferredRelativePronoun": 3
+    },
+    {
+        "vcard:title": 3
+    },
+    {
+        "http://w3id.org/roh#hasCV": 2
+    },
+    {
+        "foaf:title": 2
+    },
+    {
+        "schema:url": 2
+    },
+    {
+        "schema:name": 2
+    },
+    {
+        "foaf:currentProject": 2
+    },
+    {
+        "http://www.iana.org/assignments/link-relations/acl": 2
+    },
+    {
+        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23storageDescription": 2
+    },
+    {
+        "https://w3id.org/security#assertionMethod": 2
+    },
+    {
+        "activitystreams:following": 2
+    },
+    {
+        "activitystreams:name": 2
+    },
+    {
+        "schema:skills": 2
+    },
+    {
+        "solid:timeline": 2
+    },
+    {
+        "foaf:topic_interest": 2
+    },
+    {
+        "foaf:depiction": 2
+    },
+    {
+        "dbpedia:birthDate": 2
+    },
+    {
+        "foaf:birthday": 2
+    },
+    {
+        "foaf:gender": 2
+    },
+    {
+        "dbpedia:location": 2
+    },
+    {
+        "solid:community": 2
+    },
+    {
+        "https://www.w3.org/TR/activitypub/#following": 2
+    },
+    {
+        "vcard:url": 2
+    },
+    {
+        "solid:preferredProxy": 1
+    },
+    {
+        "http://xmlns.com/wot/0.1/hasKey": 1
+    },
+    {
+        "schema:givenName": 1
+    },
+    {
+        "schema:familyName": 1
+    },
+    {
+        "schema:spouse": 1
+    },
+    {
+        "vcard:hasRelated": 1
+    },
+    {
+        "schema:children": 1
+    },
+    {
+        "schema:performedIn": 1
+    },
+    {
+        "schema:hasPart": 1
+    },
+    {
+        "schema:hasOccupation": 1
+    },
+    {
+        "http://purl.org/ontology/cco/core#skill": 1
+    },
+    {
+        "schema:birthPlace": 1
+    },
+    {
+        "schema:homeLocation": 1
+    },
+    {
+        "solid:subjectPronoun": 1
+    },
+    {
+        "solid:objectivePronoun": 1
+    },
+    {
+        "solid:possessivePronoun": 1
+    },
+    {
+        "schema:description": 1
+    },
+    {
+        "interop:hasAuthorizationAgent": 1
+    },
+    {
+        "activitypodscontactRequests": 1
+    },
+    {
+        "activitypodscontacts": 1
+    },
+    {
+        "activitypodsignoredContacts": 1
+    },
+    {
+        "activitypodsrejectedContacts": 1
+    },
+    {
+        "dct:created": 1
+    },
+    {
+        "dct:modified": 1
+    },
+    {
+        "interop:hasRegistrySet": 1
+    },
+    {
+        "https://w3id.org/security#publicKey": 1
+    },
+    {
+        "activitystreams:endpoints": 1
+    },
+    {
+        "activitystreams:followers": 1
+    },
+    {
+        "activitystreams:preferredUsername": 1
+    },
+    {
+        "activitystreams:url": 1
+    },
+    {
+        "foaf:tipjar": 1
+    },
+    {
+        "schema:performerIn": 1
+    },
+    {
+        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23updatesViaStreamingHttp2023": 1
+    },
+    {
+        "foaf:maker": 1
+    },
+    {
+        "foaf:primaryTopic": 1
+    },
+    {
+        "https://soap.example/activitypub#hasActor": 1
+    },
+    {
+        "foaf:firstName": 1
+    },
+    {
+        "foaf:page": 1
+    },
+    {
+        "http://www.openlinksw.com/schemas/cert#hasCertificate": 1
+    },
+    {
+        "http://www.openlinksw.com/schemas/cert#trustedOrigin": 1
+    },
+    {
+        "acl:delegates": 1
+    },
+    {
+        "http://www.openlinksw.com/schemas/cert#hasIdentityDelegate": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#preferredURI": 1
+    },
+    {
+        "dbpedia:birthPlace": 1
+    },
+    {
+        "foaf:age": 1
+    },
+    {
+        "foaf:based_near": 1
+    },
+    {
+        "dbpedia:orcidId": 1
+    },
+    {
+        "foaf:workplaceHomepage": 1
+    },
+    {
+        "http://www.w3.org/ns/org#memberOf": 1
+    },
+    {
+        "owl:differentFrom": 1
+    },
+    {
+        "foaf:holdsAccount": 1
+    },
+    {
+        "http://purl.org/cerif/frapo/hasORCID": 1
+    },
+    {
+        "http://www.w3.org/ns/solid/webid-profile#publicKey": 1
+    },
+    {
+        "http://www.w3.org/ns/solid/webid-profile#inbox": 1
+    },
+    {
+        "http://www.w3.org/ns/solid/webid-profile#outbox": 1
+    },
+    {
+        "solid:preferencesFile": 1
+    },
+    {
+        "http://www.w3.org/ns/solid/webid#webId": 1
+    },
+    {
+        "https://www.w3.org/ns/auth/acl#control": 1
+    },
+    {
+        "foaf:isPrimaryTopicOf": 1
+    },
+    {
+        "http://www.wikidata.org/prop/direct/P4033": 1
+    },
+    {
+        "foaf:homePage": 1
+    },
+    {
+        "https://www.example.org/ontology#publications": 1
+    },
+    {
+        "vcard:phone": 1
+    },
+    {
+        "flow:attachment": 1
+    },
+    {
+        "https://data.knows.idlab.ugent.be/person/office/#hasAvailabilityCalendar": 1
+    },
+    {
+        "urn:solid:mpc#trustedComputationServer": 1
+    },
+    {
+        "urn:solid:mpc#trustedEncryptionServer": 1
+    },
+    {
+        "urn:podtok:core#userInfo": 1
+    },
+    {
+        "http://localhost:3000/ns#fn": 1
+    },
+    {
+        "http://localhost:3000/project.owl#name": 1
+    },
+    {
+        "http://localhost:3000/protege.owl#name": 1
+    },
+    {
+        "http://rdfs.org/resume-rdf/cv.rdfs#hasWorkHistory": 1
+    },
+    {
+        "https://schema.org/Project#leiCode": 1
+    },
+    {
+        "https://schema.org/Project#name": 1
+    },
+    {
+        "https://schema.org#name": 1
+    },
+    {
+        "https://schema.org2#name": 1
+    },
+    {
+        "https://timojkankaanpaa.solidcommunity.net/share/ekseli/ns.ttl#fn": 1
+    },
+    {
+        "https://timojkankaanpaa.solidcommunity.net/share/ekseli/ns#fn": 1
+    },
+    {
+        "https://timojkankaanpaa.solidcommunity.net/share/ekseli/projectcard.rdf#fn": 1
+    },
+    {
+        "https://timojkankaanpaa.solidcommunity.net/share/ekseli/projectcard.ttl#fn": 1
+    },
+    {
+        "https://timojkankaanpaa.solidcommunity.net/share/ekseli/protege.owl#name": 1
     }
+]
+    </pre></div>
+    <div class="display-area" id="issuers"><pre>
+{
+    "https://armoise.co": 1,
+    "https://solidcommunity.net/": 19,
+    "https://teamid.live/": 1,
+    "https://angelo.veltens.org/": 1,
+    "https://data.mrkvon.org/": 1,
+    "https://ap.mrkvon.org": 1,
+    "https://paula.veltens.org/": 1,
+    "https://drive.verborgh.org/": 1,
+    "https://solid.champin.net/": 1,
+    "https://solid.smessie.com/": 1,
+    "http://localhost:3000/": 2,
+    "https://solidweb.me/": 1,
+    "https://solid.aifb.kit.edu/": 2,
+    "https://login.inrupt.com": 1,
+    "https://2abf-78-129-38-205.ngrok.io/": 1,
+    "https://solidcommunity.net": 1
+}
+  </pre></div>
+    <div  class="display-area"id="types"><pre>
+{
+    "http://www.w3.org/ns/oa#Annotation": 6,
+    "http://www.w3.org/2002/01/bookmark#Bookmark": 18,
+    "schema:WebPage": 3,
+    "schema:DataFeed": 3,
+    "meeting:Meeting": 4,
+    "meeting:LongChat": 13,
+    "activitystreams:Activity": 3,
+    "http://generativeobjects.com/apps#VisitedPlace": 3,
+    "schema:MediaObject": 3,
+    "schema:TextDigitalDocument": 5,
+    "http://w3id.org/hospex/ns#PersonalHospexDocument": 6,
+    "https://schema.org/ItemList": 4,
+    "http://example.org/ns/Foo": 4,
+    "http://example.org/ns/Bar": 2,
+    "http://example.org/ns/Persons": 2,
+    "https://w3id.org/SpOTy/ontology#SentenceCollection": 2,
+    "vcard:AddressBook": 2,
+    "pad:NotePad": 2,
+    "flow:Tracker": 4,
+    "meeting:Chat": 2,
+    "vcard:Home": 1,
+    "http://digita.ai/voc/example#Diploma": 1
+}    </pre></div>
+    <iframe class="display-area"id="mine" src="./my-profile.html"></iframe>
+  </main>
+</div>
 
-    const resultsArea = document.getElementById('results');
-    const webidInput = document.querySelector('#webid');
-    const button = document.querySelector('button');
+<style>
+  * { font-family:Arial,Helvetica; }
+  pre { font-family:monospace; font-size:1rem; margin-left:4rem; }
+  header { width:60ch; margin:auto; margin-top:1rem; padding:1rem; padding-top:0; border-radius:5px; border:1px solid purple; }
+  .display-area { display:none; width:100%; background #cff; }
+  body { overflow:auto; }
+  h3, .button-bar { text-align:center; }
+  #app { border-radius:5px; padding:0.5rem; margin-right:1rem; cursor:pointer; }
+  iframe { height:100%; border:none; }
+  button { padding:0.5rem; border-radius:5px; margin-right:1rem; }
+</style>
+<script>
+  let buttons = document.querySelectorAll('button');
+  let displayAreas = document.querySelectorAll('.display-area');
+  for(const button of buttons){
+    button.addEventListener('click',()=>{
+      for(const area of displayAreas){
+        area.style.display = "none";
+      }      
+      document.getElementById( button.className ).style.display="block";
+    });
+  }
+</script>
 
-    webidInput.addEventListener('keypress', (e) => {    
-      if (e.key === 'Enter') {
-        showProfile( webidInput.value );
-      }
-    });
-    button.addEventListener('click', () => {
-      showProfile( webidInput.value );
-    });
-    const note = `
-    `;
-  </script>
-  <style>
-    * { font-family:Verdana,Arial,Helvetica; font-size:1.1rem; }
-    p { width:60ch; } 
-    input { width:60ch; padding:0.25rem; radius:0.5rem; margin:1rem}
-    button { radius:0.5rem; margin:1rem}
-  </style>
-</body>

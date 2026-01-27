@@ -3,55 +3,42 @@ import {authn,store} from "https://esm.sh/solid-logic";
 import {ns} from "https://esm.sh/solid-ui";
 const fetcher = store.fetcher;
 
+async function doLoad(url,fetcher){
+  fetcher ||= store.fetcher;
+  try {
+    await fetcher.load( url, {
+      headers: {accept:'text/turtle,application/ld+json'},
+      withCredentials:false,
+    });
+    return true;
+  }
+  catch(e){ console.log('fetch-error: ',url,e); return false; }
+}
 export async function loadProfile(webid){
   let loggedIn = authn.currentUser();
   let isOwner = loggedIn && loggedIn.value === (webid.value || webid);
   const webidNode = webid.value ?webid :sym(webid);
   const profile = {};
-  let response;
-
-    /* FETCH WEBID DOC
-         we use webOperation + parse since this may not be on a Solid Server
-    */
-    try {
-      response = await fetcher.webOperation( 'GET',webid,{ 
-        headers: {accept:'text/turtle,application/ld+json',withCredentials:false},
-        withCredentials:false,
-      } );
-    }
-    catch(e){ console.log('fetch-error: ',webid,e); return null; }
-    let prefixes = [];
-
-    /* PARSE WEBID DOC
-    */
-    if(response && response.responseText) {
-      try {
-        parse(response.responseText,store,webid,'text/turtle');
-        prefixes = response.responseText.split('\n').filter(
-         line => line.startsWith('@prefix')).map(
-           line => line.trim().replace('@prefix', '').replace(/</,'').replace(/>\s*\./,'').split(/\s/)
-        );
-      }
-      catch(e){ console.log('parse-error: ',webid,response.responseText); return null; }
-    }
-    else return null;
-
-    /* FETCH PREFERENCES FILE (if permissioned)
-    */
+  /* LOAD WEBID-DOCUMENT
+  */
+    let response = await doLoad(webid);
+    if(!response) return null;
+  /* LOAD PREFERENCES FILE (if permissioned)
+  */
     if(isOwner){
       const prefs = store.each( webidNode, ns.space('preferencesFile') );
       for(let p of prefs){
-        try { await fetcher.load(p);} catch(e){}
+        try { await doLoad(p) } catch(e){}
       }
     }
 
-    /* FETCH SEE-ALSOs & PRIMARY-TOPIC-OF
-    */
+  /* FETCH SEE-ALSOs & PRIMARY-TOPIC-OF
+  */
     const primaryTopic = store.each( webidNode, ns.foaf('primaryTopicOf') );
     let extended = store.each( webidNode, ns.rdfs('seeAlso') );
     extended = extended.concat(primaryTopic);
     for(let e of extended){
-      await fetcher.load(e);
+      try { await doLoad(e) } catch(e) { console.log(e) }
     }
 
     /* CREATE A SUMMARY OBJECT & RETURN IT
@@ -65,7 +52,7 @@ export async function loadProfile(webid){
     "solid:publicTypeIndex" : fetchPredicate( webidNode, ns.solid('publicTypeIndex'),store ),
     "solid:privateTypeIndex" : fetchPredicate( webidNode, ns.solid('privateTypeIndex'),store ),
     "rdfs:seeAlso" : fetchPredicate( webidNode, ns.rdfs('seeAlso'),store ),
-    "solid:TypeRegistration" : await fetchRegistrations(webidNode,'public',isOwner,store),
+    "solid:typeRegistration" : await fetchRegistrations(webidNode,'public',isOwner,store),
     "owl:sameAs" : fetchPredicate( webidNode, ns.owl('sameAs'),store ),
     "foaf:primaryTopicOf" : fetchPredicate( webidNode, ns.foaf('primaryTopicOf'),store ),
     "interop:hasAuthorizationAgent" : fetchPredicate( webidNode, sym('http://www.w3.org/ns/solid/interop#hasAuthorizationAgent'),store ),
@@ -79,8 +66,42 @@ export async function loadProfile(webid){
   }
   const all = store.match(webidNode);
   for(let a of all){
+    let key = getCurie(a.predicate.value);
     const these = store.each(webidNode,a.predicate);
-    let key = a.predicate.value;
+    profileObj[key] ||= new Array();
+    if(visited[key]) continue;
+    visited[key] = true;
+    for(let t of these){
+      let value = t.value;
+      if(key=="acl:trustedApp"){
+        let stmts = store.each(t,ns.acl('origin'));
+        for(let s of stmts){
+          value = s.value ;
+        }
+      }
+      else if(t.termType=="BlankNode"){
+        value = [];
+        for(let v of store.match(t)){
+          value.push( {[v.predicate.value]:v.object.value} );
+        }
+       
+      }
+      else if(t.termType=="Collection"){
+         value = [];
+         for(let e of t.elements){
+           let triple = store.match(e);
+           for(let tr of triple)
+             value.push( {[tr.predicate.value]:tr.object.value} );
+         }
+      }
+      if(profileObj[key].push && value && value.length) profileObj[key].push( value );
+    }
+    if(profileObj[key].length==1 ) profileObj[key] = profileObj[key][0] 
+  }
+  return(profileObj);
+}
+
+function getCurie(key){
     if(key.startsWith('http://www.w3.org/ns/solid/terms#')){
        key="solid:"+key.replace('http://www.w3.org/ns/solid/terms#','');
     }
@@ -126,42 +147,24 @@ export async function loadProfile(webid){
     else if(key.startsWith('http://www.w3.org/ns/solid/interop#')){
        key="interop:"+key.replace('http://www.w3.org/ns/solid/interop#','');
     } 
+    else if(key.startsWith('http://www.w3.org/2005/01/wf/flow#')){
+       key="flow:"+key.replace('http://www.w3.org/2005/01/wf/flow#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/pim/meeting#')){
+       key="meeting:"+key.replace('http://www.w3.org/ns/pim/meeting#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/pim/pad#')){
+       key="pad:"+key.replace('http://www.w3.org/ns/pim/pad#','');
+    } 
+    else if(key.startsWith('http://activitypods.org/ns/core#')){
+       key="activitypods"+key.replace('http://activitypods.org/ns/core#','');
+    } 
 /*
     else if(key.startsWith('')){
        key="space:"+key.replace('','');
     } 
 */
-    profileObj[key] ||= new Array();
-    if(visited[key]) continue;
-    visited[key] = true;
-    for(let t of these){
-      let value = t.value;
-      if(key=="acl:trustedApp"){
-        let stmts = store.each(t,ns.acl('origin'));
-        for(let s of stmts){
-          value = s.value ;
-        }
-      }
-      else if(t.termType=="BlankNode"){
-        value = [];
-        for(let v of store.match(t)){
-          value.push( {[v.predicate.value]:v.object.value} );
-        }
-         
-      }
-      else if(t.termType=="Collection"){
-         value = [];
-         for(let e of t.elements){
-           let triple = store.match(e);
-           for(let tr of triple)
-             value.push( {[tr.predicate.value]:tr.object.value} );
-         }
-      }
-      if(profileObj[key].push && value ) profileObj[key].push( value );
-    }
-    if(profileObj[key].length==1 ) profileObj[key] = profileObj[key][0] 
-  }
-  return(profileObj);
+    return key;
 }
 
 function getTerm(url){
@@ -178,35 +181,37 @@ function fetchPredicate(webidNode,predicate,store){
 }
 async function fetchRegistrations(webidNode,status,isOwner,store){
   if(status=="public"){
+    const pubIndex = store.any( webidNode, ns.solid('publicTypeIndex') );
     try {
-      const pubIndex = store.any( webidNode, ns.solid('publicTypeIndex') );
-      await store.fetcher.load(pubIndex);
+      await doLoad(pubIndex);
     } catch(e){}
-    return parseRegistrations(store);
+    return parseRegistrations(store,pubIndex);
   }
   else if(isOwner){
     const tmpStore=graph();
     const tmpFetcher=fetcher(tmpStore);
-    const privIndex = tmpStore.any( webidNode, ns.solid('privateTypeIndex') );
+    const privIndex = store.any( webidNode, ns.solid('privateTypeIndex') );
     try {
-      try { await tmpFetcher.load(privIndex);} catch(e){}
-      try { await store.fetcher.load(privIndex);} catch(e){}
+      try { await doLoad(privIndex,tmpFetcher);} catch(e){}
+      try { await doLoad(privIndex);} catch(e){}
     } catch(e){}
-    return parseRegistrations(tmpStore);
+    return parseRegistrations(tmpStore,privIndex);
   }
 }
-function parseRegistrations(store) {
-  let registrations = {};
-  let classes = store.match(null,UI.ns.solid('forClass'));
+function parseRegistrations(store,node) {
+  let registrations = [];
+  let classes = store.match(null,ns.solid('forClass'),null,node);
   for(let c of classes){
     let forClass = c.object.value
-    let forClassDisplay = forClass.replace(/.*\//,'').replace(/.*#/,'');
+    let forClassDisplay = getCurie(forClass);
     registrations[forClassDisplay]||=[];
     for(let o of store.match(c.subject,UI.ns.solid('instance'))){
-      registrations[forClassDisplay].push( o.object.value );
+      registrations.push( {[forClassDisplay]:o.object.value} );
+      // registrations[forClassDisplay].push( o.object.value );
     }
     for(let container of store.match(c.subject,ns.solid('instanceContainer'))){
-      registrations[forClassDisplay].push( container.object.value );
+      registrations.push( {[forClassDisplay]:container.object.value} );
+      // registrations[forClassDisplay].push( container.object.value );
     }
   }
   return registrations;

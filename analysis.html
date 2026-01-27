@@ -1,0 +1,53 @@
+<!--
+This script summarizes the predicates, issuers, and type indexes of a set of full Solid WebID Profiles.
+-->
+<body>
+<script type="module">
+  import {webids} from './drafts/stats/webids.js';  // <-- REPLACE WITH YOUR ARRAY OF WEBIDS
+  import {loadProfile} from './solid-load-profile.js';
+  let profiles = [];
+  let predicates = {};
+  let issuers = {};
+  let types = {};
+  for(let webid of webids){
+    const profile = await loadProfile(webid);
+    if(profile) profiles.push( profile );
+  }       
+  let total = profiles.length;
+  for(let profile of profiles){
+    for(let k of Object.keys(profile) ){
+      if(!profile[k]||!profile[k].length) continue;
+      predicates[k] ||= 0;
+      predicates[k]++;
+      if(k=="solid:oidcIssuer"){
+        const iss = profile[k];
+        if(typeof iss == 'string') {
+          issuers[iss] ||= 0;
+          issuers[iss]++;
+        }
+        else {
+          for(const i of profile[k]){
+            issuers[i] ||= 0;
+            issuers[i]++;
+          }
+        }
+      }
+      if(k=="solid:typeRegistration"){
+        for(let r of profile[k]){
+          r = Object.keys(r)[0];
+          types[r] ||= 0;
+          types[r]++;
+        }
+      }
+    }
+  }
+
+  predicates = Object.entries(predicates)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, number]) => ({ [name]: number }));
+
+  document.body.innerHTML += `<pre>${JSON.stringify(issuers,null,4)}</pre>`;
+  document.body.innerHTML += `<pre>${JSON.stringify(types,null,4)}</pre>`;
+  document.body.innerHTML += `<pre>${JSON.stringify(predicates,null,4)}</pre>`;
+
+</script>
