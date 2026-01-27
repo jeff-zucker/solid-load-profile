@@ -12,7 +12,7 @@
     import {loadProfile} from './solid-load-profile.js';
     async function showProfile(webid){
       resultsArea.innerHTML="Loading profile ...";
-      const profile = await loadProfile(webid,rdfHandler);
+      const profile = await loadProfile(webid);
       const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
       resultsArea.innerHTML = profileString + note;
     }
