@@ -1,5 +1,5 @@
 {
-  "name": "loadprofile",
+  "name": "solid-load-profile",
   "version": "2.0.0",
   "description": "loads a full Solid profile into a simple Javascript array",
   "type": "module",
