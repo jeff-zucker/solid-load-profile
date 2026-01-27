@@ -2,7 +2,7 @@
 
 -- loads a full Solid profile into a simple Javascript array
 
-Check it out online at http://localhost:3000/s/solid-load-profile/.
+Check it out online at https://jeff-zucker.github.io/solid-load-profile/.
 
 ## loadProfile()
 
