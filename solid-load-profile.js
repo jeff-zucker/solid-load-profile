@@ -19,27 +19,31 @@ export async function loadProfile(webid){
         withCredentials:false,
       } );
     }
-    catch(e){ console.log('fetch-error: ',webid,e); }
+    catch(e){ console.log('fetch-error: ',webid,e); return null; }
+    let prefixes = [];
 
     /* PARSE WEBID DOC
     */
     if(response && response.responseText) {
       try {
         parse(response.responseText,store,webid,'text/turtle');
+        prefixes = response.responseText.split('\n').filter(
+         line => line.startsWith('@prefix')).map(
+           line => line.trim().replace('@prefix', '').replace(/</,'').replace(/>\s*\./,'').split(/\s/)
+        );
       }
-      catch(e){ console.log('parse-error: ',webid,response.responseText); }
+      catch(e){ console.log('parse-error: ',webid,response.responseText); return null; }
     }
-    const prefixes = response.responseText.split('\n').filter(
-       line => line.startsWith('@prefix')).map(
-         line => line.trim().replace('@prefix', '').replace(/</,'').replace(/>\s*\./,'').split(/\s/)
-    );
+    else return null;
 
     /* FETCH PREFERENCES FILE (if permissioned)
     */
+    if(isOwner){
       const prefs = store.each( webidNode, ns.space('preferencesFile') );
       for(let p of prefs){
         try { await fetcher.load(p);} catch(e){}
       }
+    }
 
     /* FETCH SEE-ALSOs & PRIMARY-TOPIC-OF
     */
@@ -61,7 +65,7 @@ export async function loadProfile(webid){
     "solid:publicTypeIndex" : fetchPredicate( webidNode, ns.solid('publicTypeIndex'),store ),
     "solid:privateTypeIndex" : fetchPredicate( webidNode, ns.solid('privateTypeIndex'),store ),
     "rdfs:seeAlso" : fetchPredicate( webidNode, ns.rdfs('seeAlso'),store ),
-    "solid:TypeRegistration" : await fetchRegistrations(webidNode,'public',store),
+    "solid:TypeRegistration" : await fetchRegistrations(webidNode,'public',isOwner,store),
     "owl:sameAs" : fetchPredicate( webidNode, ns.owl('sameAs'),store ),
     "foaf:primaryTopicOf" : fetchPredicate( webidNode, ns.foaf('primaryTopicOf'),store ),
     "interop:hasAuthorizationAgent" : fetchPredicate( webidNode, sym('http://www.w3.org/ns/solid/interop#hasAuthorizationAgent'),store ),
@@ -76,16 +80,57 @@ export async function loadProfile(webid){
   const all = store.match(webidNode);
   for(let a of all){
     const these = store.each(webidNode,a.predicate);
-    let key = getTerm(a.predicate.value);
-    for(let p of prefixes){
-      if(p[2]=='http://' || p[2]=='https://') continue;
-      if(a.predicate.value.startsWith(p[2])){
-        let regex = new RegExp( p[2]) ;
-        key = a.predicate.value.replace(regex,p[1])
-        break;
-      }
+    let key = a.predicate.value;
+    if(key.startsWith('http://www.w3.org/ns/solid/terms#')){
+       key="solid:"+key.replace('http://www.w3.org/ns/solid/terms#','');
     }
-    if(key=="type") key = "rdf:type";
+    else if(key.startsWith('http://www.w3.org/ns/pim/space#')){
+       key="space:"+key.replace('http://www.w3.org/ns/pim/space#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/2006/vcard/ns#')){
+       key="vcard:"+key.replace('http://www.w3.org/2006/vcard/ns#','');
+    } 
+    else if(key.startsWith('http://xmlns.com/foaf/0.1/')){
+       key="foaf:"+key.replace('http://xmlns.com/foaf/0.1/','');
+    } 
+    else if(key.startsWith('http://www.w3.org/1999/02/22-rdf-syntax-ns#')){
+       key="rdf:"+key.replace('http://www.w3.org/1999/02/22-rdf-syntax-ns#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/ldp#')){
+       key="ldp:"+key.replace('http://www.w3.org/ns/ldp#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/auth/acl#')){
+       key="acl:"+key.replace('http://www.w3.org/ns/auth/acl#','');
+    } 
+    else if(key.startsWith('https://www.w3.org/ns/activitystreams#')){
+       key="activitystreams:"+key.replace('https://www.w3.org/ns/activitystreams#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/2000/01/rdf-schema#')){
+       key="rdfs:"+key.replace('http://www.w3.org/2000/01/rdf-schema#','');
+    } 
+    else if(key.startsWith('http://schema.org/')){
+       key="schema:"+key.replace('http://schema.org/','');
+    } 
+    else if(key.startsWith('http://www.w3.org/2002/07/owl#')){
+       key="owl:"+key.replace('http://www.w3.org/2002/07/owl#','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/auth/cert#')){
+       key="cert:"+key.replace('http://www.w3.org/ns/auth/cert#','');
+    } 
+    else if(key.startsWith('http://dbpedia.org/ontology/')){
+       key="dbpedia:"+key.replace('http://dbpedia.org/ontology/','');
+    } 
+    else if(key.startsWith('http://purl.org/dc/terms/')){
+       key="dct:"+key.replace('http://purl.org/dc/terms/','');
+    } 
+    else if(key.startsWith('http://www.w3.org/ns/solid/interop#')){
+       key="interop:"+key.replace('http://www.w3.org/ns/solid/interop#','');
+    } 
+/*
+    else if(key.startsWith('')){
+       key="space:"+key.replace('','');
+    } 
+*/
     profileObj[key] ||= new Array();
     if(visited[key]) continue;
     visited[key] = true;
@@ -131,7 +176,7 @@ function fetchPredicate(webidNode,predicate,store){
   if(record.length==1) record = record[0];
   if(record.length>0)  return record;
 }
-async function fetchRegistrations(webidNode,status,store){
+async function fetchRegistrations(webidNode,status,isOwner,store){
   if(status=="public"){
     try {
       const pubIndex = store.any( webidNode, ns.solid('publicTypeIndex') );
@@ -139,7 +184,7 @@ async function fetchRegistrations(webidNode,status,store){
     } catch(e){}
     return parseRegistrations(store);
   }
-  else {
+  else if(isOwner){
     const tmpStore=graph();
     const tmpFetcher=fetcher(tmpStore);
     const privIndex = tmpStore.any( webidNode, ns.solid('privateTypeIndex') );
