@@ -71,4 +71,8 @@ This library looks for two levels of seeAlsos to handle this, but does not recur
 </script>
 ```
 
+## Using the Analysis tool
+
+The file "analysis.html" included in this repo can, when supplied a list of webIDs, provide a summary of the predicates, issuers, and type indexes of the combined webID Profiless. The <a href="https://jeff-zucker.github.io/solid-load-profile/">demo</a> uses output from this tool.
+
 (c) Jeff Zucker, 2022-2026, may be freely used with an MIT or Apache license
