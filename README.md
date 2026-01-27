@@ -8,9 +8,8 @@ Check it out online at http://localhost:3000/s/solid-load-profile/.
 
 Loads all of the required parts of a full Solid Profile that the current user and app have access to.  Returns a Javascript object containing full information on the user's inbox, oidcIssuers, storages, type registrations, locations of all profile documents, and all other information in the full profile.
 ```
-  import './loadProfile-cdn.js';                    // or loadProfile-local.js if running locally
-  import {loadProfile} from './src/loadProfile.js';
-  loadProfile().then( (profile) => {
+  import {loadProfile} from './solid-load-profile.js';
+  loadProfile(webid).then( (profile) => {
     // access the Javascript array e.g. console.log(profile.inbox);
   });
 ```
@@ -19,7 +18,7 @@ The object will look something like this:
 ```javascript
 {
     "webid": "https://jeff-zucker.solidcommunity.net/profile/card#me",
-    "pim:storage": [
+    "space:storage": [
         "https://jeff-zucker.solidcommunity.net:8443/",
         "https://jeff-zucker.solidcommunity.net/",
         "https://jeffzucker.inrupt.net/",

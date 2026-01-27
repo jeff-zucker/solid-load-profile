@@ -1,13 +1,12 @@
-// window.onerror = function (error) {
-//  alert('Uncaught error:', error);
-// };
+import {sym,parse,graph} from "https://esm.sh/rdflib";
+import {authn,store} from "https://esm.sh/solid-logic";
+import {ns} from "https://esm.sh/solid-ui";
+const fetcher = store.fetcher;
 
-export async function loadProfile(webid,store){
+export async function loadProfile(webid){
   let loggedIn = authn.currentUser();
   let isOwner = loggedIn && loggedIn.value === (webid.value || webid);
-  const webidNode = webid.value ?webid :$rdf.sym(webid);
-  store ||= $rdf.graph();
-  const fetcher = $rdf.fetcher(store);  
+  const webidNode = webid.value ?webid :sym(webid);
   const profile = {};
   let response;
 
@@ -26,7 +25,7 @@ export async function loadProfile(webid,store){
     */
     if(response && response.responseText) {
       try {
-        $rdf.parse(response.responseText,store,webid,'text/turtle');
+        parse(response.responseText,store,webid,'text/turtle');
       }
       catch(e){ console.log('parse-error: ',webid,response.responseText); }
     }
@@ -65,7 +64,7 @@ export async function loadProfile(webid,store){
     "solid:TypeRegistration" : await fetchRegistrations(webidNode,'public',store),
     "owl:sameAs" : fetchPredicate( webidNode, ns.owl('sameAs'),store ),
     "foaf:primaryTopicOf" : fetchPredicate( webidNode, ns.foaf('primaryTopicOf'),store ),
-    "interop:hasAuthorizationAgent" : fetchPredicate( webidNode, $rdf.sym('http://www.w3.org/ns/solid/interop#hasAuthorizationAgent'),store ),
+    "interop:hasAuthorizationAgent" : fetchPredicate( webidNode, sym('http://www.w3.org/ns/solid/interop#hasAuthorizationAgent'),store ),
   }
   if(isOwner){
     profileObj.privateTypeRegistrations = await fetchRegistrations(webidNode,'private',store);
@@ -141,8 +140,8 @@ async function fetchRegistrations(webidNode,status,store){
     return parseRegistrations(store);
   }
   else {
-    const tmpStore=$rdf.graph();
-    const tmpFetcher=$rdf.fetcher(tmpStore);
+    const tmpStore=graph();
+    const tmpFetcher=fetcher(tmpStore);
     const privIndex = tmpStore.any( webidNode, ns.solid('privateTypeIndex') );
     try {
       try { await tmpFetcher.load(privIndex);} catch(e){}
