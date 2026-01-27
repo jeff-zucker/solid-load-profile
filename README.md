@@ -1,10 +1,21 @@
 # solid-load-profile
 
-loads a full Solid profile into a simple Javascript array
+-- loads a full Solid profile into a simple Javascript array
+
+Check it out online at http://localhost:3000/s/solid-load-profile/.
 
 ## loadFProfile()
 
-Loads all of the required parts of a full Solid Profile that the current user and app have access to.  Returns a Javascript object containing full information on the user's inbox, oidcIssuers, storages, type registrations, locations of all profile documents, and all other information in the full profile.  The object will look something like this:
+Loads all of the required parts of a full Solid Profile that the current user and app have access to.  Returns a Javascript object containing full information on the user's inbox, oidcIssuers, storages, type registrations, locations of all profile documents, and all other information in the full profile.
+```
+  import './loadProfile-cdn.js';                    // or loadProfile-local.js if running locally
+  import {loadProfile} from './src/loadProfile.js';
+  await loadProfile().then( (profile) => {
+    // access the Javascript array e.g. console.log(profile.inbox);
+  };
+```
+
+The object will look something like this:
 ```javascript
 {
     "webid": "https://jeff-zucker.solidcommunity.net/profile/card#me",
