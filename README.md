@@ -58,16 +58,16 @@ This library looks for two levels of seeAlsos to handle this, but does not recur
 <body> <div id="results"></div>
 
 <script type="module">
-    import './loadProfile-cdn.js';  // or loadProfile-local.js if running locally
+
     import {loadProfile} from './src/loadProfile.js';
 
     async function showProfile(webid){
         let profile = await loadProfile();
-        let name = profile.name;
         const profileString = "<pre>"+ JSON.stringify(profile,null,4)+"</pre>";
-        document.getElementById('results').innerHTML = name + profileString;
+        document.getElementById('results').innerHTML = profileString;
     }
 	showProfile(<ANY-WEBID-HERE>);
+
 </script>
 ```
 
