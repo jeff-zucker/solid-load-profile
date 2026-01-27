@@ -12,7 +12,7 @@ Loads all of the required parts of a full Solid Profile that the current user an
   import {loadProfile} from './src/loadProfile.js';
   loadProfile().then( (profile) => {
     // access the Javascript array e.g. console.log(profile.inbox);
-  };
+  });
 ```
 
 The object will look something like this:
