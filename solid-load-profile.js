@@ -70,14 +70,20 @@ export async function loadProfile(webid){
     visited[k]=true;
   }
   const all = store.match(webidNode);
+  const host = window.location.href;
+  let hostExp = new RegExp(host,'g');
   for(let a of all){
     if(a.graph.value=="chrome://TheCurrentSession") continue;
+    if(a.object.value.startsWith(host) && typeof a.object.value == 'string') {
+      a.object.value = a.object.value.replace(hostExp,a.graph.value);
+    }
     let key = getCurie(a.predicate.value);
     const these = store.each(webidNode,a.predicate);
     profileObj[key] ||= new Array();
     if(visited[key]) continue;
     visited[key] = true;
     for(let t of these){
+      t.value = t.value.replace(hostExp,a.graph.value);
       let value = t.value;
       if(key=="acl:trustedApp"){
         let stmts = store.each(t,ns.acl('origin'));
