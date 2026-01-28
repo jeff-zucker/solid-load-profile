@@ -5,7 +5,11 @@ const fetcher = store.fetcher;
 
 export {store};
 
+const docVisited = {};
+
 async function doLoad(url,fetcher){
+  if( docVisited[url] ) return;
+  docVisited[url] = true;
   fetcher ||= store.fetcher;
   try {
     await fetcher.load( url, {
@@ -36,7 +40,7 @@ export async function loadProfile(webid){
 
   /* FETCH SEE-ALSOs & PRIMARY-TOPIC-OF
   */
-    const primaryTopic = store.each( webidNode, ns.foaf('primaryTopicOf') );
+    const primaryTopic = store.each( webidNode, ns.foaf('isPrimaryTopicOf') );
     let extended = store.each( webidNode, ns.rdfs('seeAlso') );
     extended = extended.concat(primaryTopic);
     for(let e of extended){
