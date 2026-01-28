@@ -3,6 +3,8 @@ import {authn,store} from "https://esm.sh/solid-logic";
 import {ns} from "https://esm.sh/solid-ui";
 const fetcher = store.fetcher;
 
+export {store};
+
 async function doLoad(url,fetcher){
   fetcher ||= store.fetcher;
   try {
@@ -62,10 +64,14 @@ export async function loadProfile(webid){
   }
   let visited = {};
   for(let k of Object.keys(profileObj)){
+    if(profileObj[k] && profileObj[k].length==0 ) {
+      delete profileObj[k];
+    }
     visited[k]=true;
   }
   const all = store.match(webidNode);
   for(let a of all){
+    if(a.graph.value=="chrome://TheCurrentSession") continue;
     let key = getCurie(a.predicate.value);
     const these = store.each(webidNode,a.predicate);
     profileObj[key] ||= new Array();
@@ -82,7 +88,8 @@ export async function loadProfile(webid){
       else if(t.termType=="BlankNode"){
         value = [];
         for(let v of store.match(t)){
-          value.push( {[v.predicate.value]:v.object.value} );
+          let pred = getCurie(v.predicate.value);
+          value.push( {[pred]:v.object.value} );
         }
        
       }
@@ -90,8 +97,10 @@ export async function loadProfile(webid){
          value = [];
          for(let e of t.elements){
            let triple = store.match(e);
-           for(let tr of triple)
-             value.push( {[tr.predicate.value]:tr.object.value} );
+           for(let tr of triple){
+             let pred = getCurie(tr.predicate.value);
+             value.push({ [pred] : tr.object.value });
+           }
          }
       }
       if(profileObj[key].push && value && value.length) profileObj[key].push( value );
@@ -180,17 +189,17 @@ function fetchPredicate(webidNode,predicate,store){
   if(record.length>0)  return record;
 }
 async function fetchRegistrations(webidNode,status,isOwner,store){
+  const privIndex = store.any( webidNode, ns.solid('privateTypeIndex') );
+  const pubIndex = store.any( webidNode, ns.solid('publicTypeIndex') );
   if(status=="public"){
-    const pubIndex = store.any( webidNode, ns.solid('publicTypeIndex') );
-    try {
+    if(pubIndex) try {
       await doLoad(pubIndex);
     } catch(e){}
     return parseRegistrations(store,pubIndex);
   }
-  else if(isOwner){
+  else if(privIndex && isOwner){
     const tmpStore=graph();
     const tmpFetcher=fetcher(tmpStore);
-    const privIndex = store.any( webidNode, ns.solid('privateTypeIndex') );
     try {
       try { await doLoad(privIndex,tmpFetcher);} catch(e){}
       try { await doLoad(privIndex);} catch(e){}
