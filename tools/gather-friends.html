@@ -1,0 +1,55 @@
+<!--
+This script gathers profiles from a list of webIDs
+-->
+<body>
+<script type="module">
+  import {webidsAvailable} from './data/available.js';  // <-- REPLACE WITH YOUR ARRAY OF WEBIDS
+  import {loadProfile,store,setProxy} from './solid-load-profile.js';
+
+async function gather(){
+  let profiles = [];
+  let visited = {}
+  let available = {}
+  let unavailable = {}
+  let limit = 500;
+  let num = 0;
+  setProxy('http://localhost:3002/proxy?url=');  
+  for(let webid of webidsAvailable){
+    if(visited[webid]) continue;
+    num++;
+    if(num > limit) break;
+    visited[webid] = true;
+    const profile = await loadProfile(webid);
+    if(profile){
+      available[webid]=true;
+      profiles.push( profile );
+      await saveProfile(webid,profile);
+    }
+    else {
+      unavailable[webid] = true;
+    }
+  }  
+  available = Object.keys(available);
+  unavailable = Object.keys(unavailable);
+  document.body.innerHTML += `available:<pre>${JSON.stringify(available,null,4)}</pre>`;
+  document.body.innerHTML += `unavailable:<pre>${JSON.stringify(unavailable,null,4)}</pre>`;
+}
+async function saveProfile(webid,profile){
+  let name = profile['foaf:name'] || profile['vcard:fn'] || webid.replace(/http.:\/\//,'').replace(/\//g,'_');
+  if(typeof name == 'object') name = name[0];
+  name = name.replace(/\s/g,"_");
+  const path = `/s/solid-load-profile/data/profiles/${name}.json`;
+  const contentType = 'application/json';
+  const body = JSON.stringify(profile,null,4);
+  try {
+    const response = await store.fetcher.webOperation('PUT',path,{body,contentType});  
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+    }
+    else {
+      console.log(path," saved!");
+    }
+  } catch (error) {  alert('PUT request failed: '+ error); }
+}
+gather();
+</script>

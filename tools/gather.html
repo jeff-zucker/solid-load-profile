@@ -1,0 +1,80 @@
+<!--
+This script gathers profiles from a list of webIDs
+-->
+<body>
+<script type="module">
+
+//import {webids} from './data/available.js';  // <-- REPLACE WITH YOUR ARRAY OF WEBIDS
+import {loadProfile,store,setProxy} from './solid-load-profile.js';
+
+function run(){
+  gather('./data/friends.json','./data/visited.json');
+}
+
+async function gather(newIds,oldIds){
+  let webids = await readJson(newIds);
+  let seen = await readJson(oldIds)|| {
+    available   : [],
+    unavailable : [],
+  };
+  let visited = seen.available.concat(seen.unavailable);
+  let profiles = [];
+  let limit = 500;
+  let num = 0;
+  setProxy('http://localhost:3002/proxy?url=');  
+  for(let webid of webids){
+    if(visited[webid]) continue;
+    visited[webid] = true;
+    num++;
+    if(num > limit) break;
+    if(webid.match('inrupt.net')) {
+      if(!seen.unavailable.includes(webid)) seen.unavailable.push(webid);
+      continue;
+    }
+    const profile = await loadProfile(webid);
+    if(profile){
+      if(!seen.available.includes(webid)) seen.available.push(webid);
+      profiles.push( profile );
+      await saveProfile(webid,profile);
+      document.body.innerHTML += `<div>${webid}</div>`;
+    }
+    else {
+      if(!seen.unavailable.includes(webid)) seen.unavailable[webid] = true;
+    }
+  }  
+  await writeJson('./data/visited.json',seen);
+  document.body.innerHTML += `ALL done!`;
+}
+async function saveProfile(webid,profile){
+  let name = profile['foaf:name'] || profile['vcard:fn'] || webid.replace(/http.:\/\//,'').replace(/\//g,'_');
+  if(typeof name == 'object') name = name[0];
+  name = name.replace(/\s/g,"_");
+  const path = `/s/solid-load-profile/data/profiles/${name}.json`;
+  const contentType = 'application/json';
+  const body = JSON.stringify(profile,null,4);
+  await PUT(path,body,contentType);
+}
+
+async function PUT(path,body,contentType){
+  try {
+    const response = await store.fetcher.webOperation('PUT',path,{body,contentType});  
+    if (!response.ok) {
+      console.log(`HTTP error! status: ${response.status}`);
+    }
+    else {
+      console.log(path," saved!");
+    }
+  } catch (error) {  console.log('PUT request failed: '+ error); }
+}
+async function readJson(url){
+  let r = await store.fetcher.webOperation('GET',url);
+  return JSON.parse(r.responseText);
+}
+async function writeJson(path,object){
+  const body = JSON.stringify(object,null,4);
+  let r = await PUT(path,body,'application/json');
+  return r;
+}
+
+run();
+</script>

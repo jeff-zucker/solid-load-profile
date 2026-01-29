@@ -3,19 +3,15 @@
     <h3>State of the Solid WebID Profile - 2026-01-27</h3>
 
     <p>
-      I gathered WebIDs from the <a href="https://solidproject.solidcommunity.net/catalog/" target="_BLANK">Solid Resources Catlaog</a>,
-      loaded the full profiles assoiated with them and analyzed them using <a href="https://github.com/jeff-zucker/solid-load-profile" target="_BLANK"> solid-load-profile </a>. 
+      I gathered WebIDs from the <a href="https://solidproject.solidcommunity.net/catalog/" target="_BLANK">Solid Resources Catlaog</a>, loaded the full profiles assoiated with them and then loaded all of the Profiles associated with webIDs linked using the `foaf:knows` predicate in the original catalog profiles.  I did the loadding and analysis using <a href="https://github.com/jeff-zucker/solid-load-profile" target="_BLANK"> solid-load-profile </a>. 
       Here are the general stats.  Click on the buttons below to see more details or to see 
       how this library interprets your own webID Profile.
     </p>
 
     <pre>
-      330 total people in the Catalog 
-       95 listed WebIDs
-       50 unavailable - defunct host (inrupt.net)
-        8 unavailable - CORS issues
-        5 unavailable - 401, 404, expired cert
-       32 available
+       95 WebIDs listed in the Catalog
+      375 WebIDs of friends of people listed in the Catalog
+      470 profiles included in the survey
     </pre>
 
     <div class="button-bar">  
@@ -30,211 +26,484 @@
     <div class="display-area" id="predicates"><pre>
 [
     {
-        "webid": 32
+        "webid": 470
     },
     {
-        "rdf:type": 31
+        "solid:typeRegistration": 442
     },
     {
-        "solid:publicTypeIndex": 30
+        "rdf:type": 440
     },
     {
-        "solid:oidcIssuer": 29
+        "foaf:familyName": 361
     },
     {
-        "space:storage": 28
+        "foaf:givenName": 360
     },
     {
-        "ldp:inbox": 28
+        "rdfs:label": 357
     },
     {
-        "foaf:name": 28
+        "http://purl.org/dc/elements/1.1/title": 319
     },
     {
-        "space:preferencesFile": 28
+        "foaf:name": 76
     },
     {
-        "solid:privateTypeIndex": 25
+        "solid:oidcIssuer": 71
     },
     {
-        "vcard:fn": 23
+        "ldp:inbox": 66
     },
     {
-        "acl:trustedApp": 22
+        "space:storage": 64
     },
     {
-        "foaf:knows": 20
+        "solid:publicTypeIndex": 64
     },
     {
-        "solid:account": 20
+        "space:preferencesFile": 63
     },
     {
-        "solid:typeRegistration": 19
+        "solid:privateTypeIndex": 58
     },
     {
-        "vcard:hasPhoto": 16
+        "foaf:knows": 53
     },
     {
-        "vcard:role": 13
+        "solid:account": 51
     },
     {
-        "vcard:organization-name": 12
+        "vcard:fn": 50
     },
     {
-        "vcard:hasEmail": 11
+        "acl:trustedApp": 50
     },
     {
-        "vcard:note": 11
+        "vcard:hasPhoto": 39
     },
     {
-        "foaf:account": 9
+        "vcard:organization-name": 31
     },
     {
-        "foaf:img": 9
+        "vcard:role": 25
     },
     {
-        "schema:knowsLanguage": 8
+        "vcard:note": 21
     },
     {
-        "foaf:familyName": 7
+        "foaf:account": 18
     },
     {
-        "foaf:givenName": 7
+        "vcard:hasAddress": 17
     },
     {
-        "foaf:homepage": 7
+        "foaf:img": 16
     },
     {
-        "vcard:hasAddress": 7
+        "vcard:hasEmail": 15
     },
     {
-        "foaf:mbox": 6
+        "rdfs:seeAlso": 15
     },
     {
-        "foaf:nick": 6
+        "cert:key": 14
     },
     {
-        "owl:sameAs": 6
+        "foaf:mbox": 13
     },
     {
-        "solid:profileBackgroundColor": 5
+        "foaf:nick": 13
     },
     {
-        "solid:oidcIssuerRegistrationToken": 5
+        "http://www.w3.org/2007/05/powder-s#describedby": 13
     },
     {
-        "rdfs:seeAlso": 4
+        "foaf:homepage": 12
     },
     {
-        "cert:key": 4
-p    },
-    {
-        "foaf:weblog": 4
+        "owl:sameAs": 12
     },
     {
-        "vcard:bday": 4
+        "solid:profileBackgroundColor": 11
     },
     {
-        "vcard:hasTelephone": 4
+        "schema:knowsLanguage": 11
     },
     {
-        "solid:preferredObjectPronoun": 4
+        "solid:profileHighlightColor": 10
     },
     {
-        "solid:preferredSubjectPronoun": 4
+        "http://www.iana.org/assignments/link-relations/acl": 10
     },
     {
-        "solid:profileHighlightColor": 4
+        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23storageDescription": 10
     },
     {
-        "rdfs:label": 3
+        "vcard:bday": 9
     },
     {
-        "foaf:interest": 3
+        "dct:modified": 9
     },
     {
-        "foaf:made": 3
+        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23updatesViaStreamingHttp2023": 9
     },
     {
-        "foaf:publications": 3
+        "solid:preferredObjectPronoun": 8
     },
     {
-        "activitystreams:outbox": 3
+        "solid:preferredSubjectPronoun": 8
     },
     {
-        "solid:preferredRelativePronoun": 3
+        "foaf:topic_interest": 8
     },
     {
-        "vcard:title": 3
+        "http://www.w3.org/ns/posix/stat#mtime": 8
     },
     {
-        "http://w3id.org/roh#hasCV": 2
+        "solid:oidcIssuerRegistrationToken": 7
     },
     {
-        "foaf:title": 2
+        "solid:preferredRelativePronoun": 7
     },
     {
-        "schema:url": 2
+        "ldp:contains": 7
     },
     {
-        "schema:name": 2
+        "vcard:url": 6
     },
     {
-        "foaf:currentProject": 2
+        "solid:timeline": 6
     },
     {
-        "http://www.iana.org/assignments/link-relations/acl": 2
+        "schema:skills": 6
     },
     {
-        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23storageDescription": 2
+        "foaf:publications": 6
     },
     {
-        "https://w3id.org/security#assertionMethod": 2
+        "vcard:title": 6
     },
     {
-        "activitystreams:following": 2
+        "vcard:hasTelephone": 5
+    },
+    {
+        "https://www.w3.org/TR/activitypub/#following": 5
+    },
+    {
+        "foaf:weblog": 5
+    },
+    {
+        "activitystreams:outbox": 5
+    },
+    {
+        "foaf:made": 5
+    },
+    {
+        "http://www.openlinksw.com/schemas/cert#hasCertificate": 5
+    },
+    {
+        "flow:attachment": 5
+    },
+    {
+        "https://data.knows.idlab.ugent.be/person/office/#hasAvailabilityCalendar": 4
+    },
+    {
+        "foaf:interest": 4
+    },
+    {
+        "foaf:mbox_sha1sum": 4
+    },
+    {
+        "http://www.w3.org/1999/xhtml/vocab#alternate": 4
+    },
+    {
+        "schema:name": 4
+    },
+    {
+        "foaf:title": 4
+    },
+    {
+        "foaf:workplaceHomepage": 4
+    },
+    {
+        "solid:community": 3
+    },
+    {
+        "schema:url": 3
+    },
+    {
+        "foaf:gender": 3
+    },
+    {
+        "acl:delegates": 3
+    },
+    {
+        "foaf:depiction": 3
+    },
+    {
+        "foaf:firstName": 3
+    },
+    {
+        "foaf:based_near": 3
+    },
+    {
+        "http://www.w3.org/ns/org#memberOf": 3
+    },
+    {
+        "dbpedia:orcidId": 3
+    },
+    {
+        "interop:hasAuthorizationAgent": 3
+    },
+    {
+        "interop:hasRegistrySet": 3
     },
     {
         "activitystreams:name": 2
     },
     {
-        "schema:skills": 2
+        "activitystreams:following": 2
     },
     {
-        "solid:timeline": 2
+        "foaf:pastProject": 2
     },
     {
-        "foaf:topic_interest": 2
+        "http://purl.org/ontology/cco/core#skill": 2
     },
     {
-        "foaf:depiction": 2
+        "https://w3id.org/security#assertionMethod": 2
     },
     {
-        "dbpedia:birthDate": 2
+        "http://purl.org/cerif/frapo/hasORCID": 2
+    },
+    {
+        "urn:podtok:core#userInfo": 2
+    },
+    {
+        "schema:birthPlace": 2
+    },
+    {
+        "schema:homeLocation": 2
     },
     {
         "foaf:birthday": 2
     },
     {
-        "foaf:gender": 2
+        "foaf:phone": 2
     },
     {
-        "dbpedia:location": 2
+        "http://www.openlinksw.com/schemas/cert#hasIdentityDelegate": 2
     },
     {
-        "solid:community": 2
+        "foaf:page": 2
     },
     {
-        "https://www.w3.org/TR/activitypub/#following": 2
+        "http://xmlns.com/wot/0.1/hasKey": 2
     },
     {
-        "vcard:url": 2
+        "foaf:currentProject": 2
+    },
+    {
+        "http://www.wikidata.org/prop/direct/P4033": 2
+    },
+    {
+        "foaf:age": 2
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#preferredURI": 2
+    },
+    {
+        "http://w3id.org/roh#hasCV": 2
+    },
+    {
+        "foaf:isPrimaryTopicOf": 2
+    },
+    {
+        "vcard:hasGender": 2
+    },
+    {
+        "foaf:maker": 2
+    },
+    {
+        "foaf:primaryTopic": 2
+    },
+    {
+        "dct:create": 1
+    },
+    {
+        "http://purl.org/ontology/mo/Track": 1
+    },
+    {
+        "http://purl.org/pmx#cupa": 1
+    },
+    {
+        "foaf:tipjar": 1
+    },
+    {
+        "schema:performerIn": 1
+    },
+    {
+        "http://ramonantonio.net/doac/0.1/#summary": 1
+    },
+    {
+        "http://ramonantonio.net/doac/0.1/#education": 1
+    },
+    {
+        "http://ramonantonio.net/doac/0.1/#experience": 1
+    },
+    {
+        "http://ramonantonio.net/doac/0.1/#publication": 1
+    },
+    {
+        "solid:publicId": 1
+    },
+    {
+        "solid:cornerDotColor": 1
+    },
+    {
+        "solid:cornerSquareColor": 1
+    },
+    {
+        "solid:profileHigh": 1
+    },
+    {
+        "solid:profileHighlightColor2": 1
+    },
+    {
+        "solid:profileHighlightColor3": 1
+    },
+    {
+        "solid:Role": 1
+    },
+    {
+        "solid:testing": 1
+    },
+    {
+        "solid:testingT": 1
+    },
+    {
+        "foaf:follows": 1
+    },
+    {
+        "vcard:phone": 1
+    },
+    {
+        "https://terms.math.livegraph.org#storage": 1
+    },
+    {
+        "https://w3id.org/def/lpapps#lpStorage": 1
+    },
+    {
+        "schema:birthDate": 1
+    },
+    {
+        "schema:sameAs": 1
+    },
+    {
+        "rdfs:description": 1
+    },
+    {
+        "http://www.openlinksw.com/schemas/cert#trustedOrigin": 1
+    },
+    {
+        "foaf:surname": 1
+    },
+    {
+        "http://vocab.lenka.no/geo-deling#eier": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#home": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#nearestAirport": 1
+    },
+    {
+        "http://purl.org/net/inkel/rdf/schemas/lang/1.1#masters": 1
+    },
+    {
+        "http://purl.org/net/inkel/rdf/schemas/lang/1.1#reads": 1
+    },
+    {
+        "http://purl.org/vocab/relationship/spouseOf": 1
+    },
+    {
+        "http://purl.org/vocab/relationship/parentOf": 1
+    },
+    {
+        "http://purl.org/vocab/relationship/childOf": 1
+    },
+    {
+        "http://purl.org/vocab/bio/0.1/olb": 1
+    },
+    {
+        "http://purl.org/vocab/bio/0.1/keywords": 1
+    },
+    {
+        "http://purl.org/vocab/bio/0.1/event": 1
+    },
+    {
+        "http://purl.org/net/vocab/2004/07/visit#country": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#bookmarkIndex": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#privateBookmarkIndex": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#privateCommentIndex": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#privateLikeIndex": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#privateTopicIndex": 1
+    },
+    {
+        "https://stashdat.link/pb.ttl#topicIndex": 1
+    },
+    {
+        "vcard:email": 1
+    },
+    {
+        "foaf:holdsAccount": 1
+    },
+    {
+        "http://open.vocab.org/terms/twitter-id": 1
+    },
+    {
+        "http://purl.org/spar/scoro/hasORCID": 1
+    },
+    {
+        "https://data.knows.idlab.ugent.be/person/office/#hasVacationCalendar": 1
+    },
+    {
+        "urn:solid:mpc#trustedComputationServer": 1
+    },
+    {
+        "urn:solid:mpc#trustedEncryptionServer": 1
+    },
+    {
+        "schema:image": 1
+    },
+    {
+        "https://example.com/ns/orchestrator": 1
+    },
+    {
+        "dbpedia:birthPlace": 1
+    },
+    {
+        "dbpedia:birthDate": 1
+    },
+    {
+        "dbpedia:location": 1
+    },
+    {
+        "owl:differentFrom": 1
     },
     {
         "solid:preferredProxy": 1
-    },
-    {
-        "http://xmlns.com/wot/0.1/hasKey": 1
     },
     {
         "schema:givenName": 1
@@ -255,34 +524,7 @@ p    },
         "schema:performedIn": 1
     },
     {
-        "schema:hasPart": 1
-    },
-    {
         "schema:hasOccupation": 1
-    },
-    {
-        "http://purl.org/ontology/cco/core#skill": 1
-    },
-    {
-        "schema:birthPlace": 1
-    },
-    {
-        "schema:homeLocation": 1
-    },
-    {
-        "solid:subjectPronoun": 1
-    },
-    {
-        "solid:objectivePronoun": 1
-    },
-    {
-        "solid:possessivePronoun": 1
-    },
-    {
-        "schema:description": 1
-    },
-    {
-        "interop:hasAuthorizationAgent": 1
     },
     {
         "activitypodscontactRequests": 1
@@ -300,12 +542,6 @@ p    },
         "dct:created": 1
     },
     {
-        "dct:modified": 1
-    },
-    {
-        "interop:hasRegistrySet": 1
-    },
-    {
         "https://w3id.org/security#publicKey": 1
     },
     {
@@ -321,118 +557,7 @@ p    },
         "activitystreams:url": 1
     },
     {
-        "foaf:tipjar": 1
-    },
-    {
-        "schema:performerIn": 1
-    },
-    {
-        "http://www.iana.org/assignments/link-relations/http%3A%2F%2Fwww.w3.org%2Fns%2Fsolid%2Fterms%23updatesViaStreamingHttp2023": 1
-    },
-    {
-        "foaf:maker": 1
-    },
-    {
-        "foaf:primaryTopic": 1
-    },
-    {
-        "https://soap.example/activitypub#hasActor": 1
-    },
-    {
-        "foaf:firstName": 1
-    },
-    {
-        "foaf:page": 1
-    },
-    {
-        "http://www.openlinksw.com/schemas/cert#hasCertificate": 1
-    },
-    {
-        "http://www.openlinksw.com/schemas/cert#trustedOrigin": 1
-    },
-    {
-        "acl:delegates": 1
-    },
-    {
-        "http://www.openlinksw.com/schemas/cert#hasIdentityDelegate": 1
-    },
-    {
-        "http://www.w3.org/2000/10/swap/pim/contact#preferredURI": 1
-    },
-    {
-        "dbpedia:birthPlace": 1
-    },
-    {
-        "foaf:age": 1
-    },
-    {
-        "foaf:based_near": 1
-    },
-    {
-        "dbpedia:orcidId": 1
-    },
-    {
-        "foaf:workplaceHomepage": 1
-    },
-    {
-        "http://www.w3.org/ns/org#memberOf": 1
-    },
-    {
-        "owl:differentFrom": 1
-    },
-    {
-        "foaf:holdsAccount": 1
-    },
-    {
-        "http://purl.org/cerif/frapo/hasORCID": 1
-    },
-    {
-        "http://www.w3.org/ns/solid/webid-profile#publicKey": 1
-    },
-    {
-        "http://www.w3.org/ns/solid/webid-profile#inbox": 1
-    },
-    {
-        "http://www.w3.org/ns/solid/webid-profile#outbox": 1
-    },
-    {
-        "solid:preferencesFile": 1
-    },
-    {
-        "http://www.w3.org/ns/solid/webid#webId": 1
-    },
-    {
-        "https://www.w3.org/ns/auth/acl#control": 1
-    },
-    {
-        "foaf:isPrimaryTopicOf": 1
-    },
-    {
-        "http://www.wikidata.org/prop/direct/P4033": 1
-    },
-    {
-        "foaf:homePage": 1
-    },
-    {
-        "https://www.example.org/ontology#publications": 1
-    },
-    {
-        "vcard:phone": 1
-    },
-    {
-        "flow:attachment": 1
-    },
-    {
-        "https://data.knows.idlab.ugent.be/person/office/#hasAvailabilityCalendar": 1
-    },
-    {
-        "urn:solid:mpc#trustedComputationServer": 1
-    },
-    {
-        "urn:solid:mpc#trustedEncryptionServer": 1
-    },
-    {
-        "urn:podtok:core#userInfo": 1
+        "https://testingsolidos.solidcommunity.net/profile/card#otherPurplePhoto": 1
     },
     {
         "http://localhost:3000/ns#fn": 1
@@ -472,61 +597,141 @@ p    },
     },
     {
         "https://timojkankaanpaa.solidcommunity.net/share/ekseli/protege.owl#name": 1
+    },
+    {
+        "http://rdfs.org/sioc/ns#avatar": 1
+    },
+    {
+        "schema:owns": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#assistant": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#homePage": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#office": 1
+    },
+    {
+        "http://www.w3.org/2000/10/swap/pim/contact#publicHomePage": 1
+    },
+    {
+        "solid:editableProfile": 1
+    },
+    {
+        "foaf:family_name": 1
+    },
+    {
+        "foaf:givenname": 1
+    },
+    {
+        "foaf:openid": 1
+    },
+    {
+        "solid:subjectPronoun": 1
+    },
+    {
+        "solid:objectivePronoun": 1
+    },
+    {
+        "solid:possessivePronoun": 1
+    },
+    {
+        "schema:description": 1
+    },
+    {
+        "http://www.w3.org/ns/ma-ont#format": 1
+    },
+    {
+        "http://www.w3.org/ns/posix/stat#size": 1
+    },
+    {
+        "schema:parent": 1
+    },
+    {
+        "schema:sibling": 1
+    },
+    {
+        "https://soap.example/activitypub#hasActor": 1
     }
 ]
     </pre></div>
+
     <div class="display-area" id="issuers"><pre>
 {
-    "https://armoise.co": 1,
-    "https://solidcommunity.net/": 19,
-    "https://teamid.live/": 1,
+    "https://solidcommunity.net/": 50,
     "https://angelo.veltens.org/": 1,
-    "https://data.mrkvon.org/": 1,
-    "https://ap.mrkvon.org": 1,
-    "https://paula.veltens.org/": 1,
-    "https://drive.verborgh.org/": 1,
-    "https://solid.champin.net/": 1,
+    "https://solid.aifb.kit.edu/": 2,
+    "http://id.myopenlink.net": 2,
     "https://solid.smessie.com/": 1,
     "http://localhost:3000/": 2,
-    "https://solidweb.me/": 1,
-    "https://solid.aifb.kit.edu/": 2,
-    "https://login.inrupt.com": 1,
+    "https://solid.openlinksw.com:8444": 2,
+    "https://patrickhochstenbach.net/": 1,
+    "https://paula.veltens.org/": 1,
+    "https://solid.champin.net/": 1,
+    "https://pheyvaer.pod.knows.idlab.ugent.be/": 1,
+    "https://pod.rubendedecker.be/": 1,
+    "https://drive.verborgh.org/": 1,
+    "https://https://solidweb.org": 1,
+    "https://armoise.co": 1,
+    "https://teamid.live/": 1,
+    "https://timbl.com": 1,
     "https://2abf-78-129-38-205.ngrok.io/": 1,
-    "https://solidcommunity.net": 1
+    "https://solidcommunity.net": 1,
+    "https://auth.hackers4peace.net/": 2,
+    "https://example.test": 1,
+    "https://login.inrupt.com": 1,
+    "https://data.mrkvon.org/": 1,
+    "https://ap.mrkvon.org": 1,
+    "https://pod.liquid.surf/": 1
 }
-  </pre></div>
-    <div  class="display-area"id="types"><pre>
+    </pre></div>
+    <div class="display-area"id="types"><pre>
 {
-    "http://www.w3.org/ns/oa#Annotation": 6,
-    "http://www.w3.org/2002/01/bookmark#Bookmark": 18,
-    "schema:WebPage": 3,
-    "schema:DataFeed": 3,
-    "meeting:Meeting": 4,
-    "meeting:LongChat": 13,
-    "activitystreams:Activity": 3,
-    "http://generativeobjects.com/apps#VisitedPlace": 3,
-    "schema:MediaObject": 3,
-    "schema:TextDigitalDocument": 5,
-    "http://w3id.org/hospex/ns#PersonalHospexDocument": 6,
-    "https://schema.org/ItemList": 4,
-    "http://example.org/ns/Foo": 4,
-    "http://example.org/ns/Bar": 2,
-    "http://example.org/ns/Persons": 2,
-    "https://w3id.org/SpOTy/ontology#SentenceCollection": 2,
-    "vcard:AddressBook": 2,
-    "pad:NotePad": 2,
-    "flow:Tracker": 4,
-    "meeting:Chat": 2,
-    "vcard:Home": 1,
-    "http://digita.ai/voc/example#Diploma": 1
-}    </pre></div>
+    "schema:GeoCoordinates": 1192,
+    "schema:TextDigitalDocument": 3582,
+    "http://www.w3.org/2002/01/bookmark#Bookmark": 5662,
+    "activitystreams:Collection": 802,
+    "activitystreams:Activity": 404,
+    "http://generativeobjects.com/apps#VisitedPlace": 404,
+    "schema:MediaObject": 1604,
+    "http://w3id.org/hospex/ns#PersonalHospexDocument": 1615,
+    "meeting:LongChat": 2853,
+    "https://schema.org/ItemList": 807,
+    "meeting:Meeting": 813,
+    "https://michaud.inrupt.net/public/golf/Player": 400,
+    "https://michaud.inrupt.net/public/golf/Club": 400,
+    "https://michaud.inrupt.net/public/golf/Marker": 400,
+    "https://michaud.inrupt.net/public/golf/Course": 400,
+    "https://michaud.inrupt.net/public/golf/Bag": 800,
+    "https://michaud.inrupt.net/public/golf/Game": 800,
+    "https://agora.solidcommunity.net/public/Annonce": 400,
+    "http://www.w3.org/ns/oa#Annotation": 424,
+    "vcard:AddressBook": 1209,
+    "pad:NotePad": 407,
+    "flow:Tracker": 3202,
+    "meeting:Chat": 407,
+    "schema:WebPage": 407,
+    "schema:DataFeed": 407,
+    "http://example.org/ns/Foo": 44,
+    "http://example.org/ns/Bar": 22,
+    "http://example.org/ns/Persons": 22,
+    "https://w3id.org/SpOTy/ontology#SentenceCollection": 22,
+    "https://terms.math.livegraph.org#Definition": 6,
+    "https://terms.math.livegraph.org#Statement": 6,
+    "https://terms.math.livegraph.org#concept": 2,
+    "vcard:Home": 7,
+    "http://digita.ai/voc/example#Diploma": 7
+}
+    </pre></div>
     <iframe class="display-area"id="mine" src="./my-profile.html"></iframe>
   </main>
 </div>
 
 <style>
   * { font-family:Arial,Helvetica; }
-  pre { font-family:monospace; font-size:1rem; margin-left:4rem; }
+  pre { font-family:monospace; font-size:0.9rem; margin-left:0; padding-left:0; }
   header { width:60ch; margin:auto; margin-top:1rem; padding:1rem; padding-top:0; border-radius:5px; border:1px solid purple; }
   .display-area { display:none; width:100%; background #cff; }
   body { overflow:auto; }

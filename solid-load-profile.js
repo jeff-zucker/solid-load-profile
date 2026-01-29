@@ -6,8 +6,14 @@ const fetcher = store.fetcher;
 export {store};
 
 const docVisited = {};
+let proxy="";
+
+export function setProxy(pattern){
+  proxy = pattern;
+}
 
 async function doLoad(url,fetcher){
+  url = url.value || url;
   if( docVisited[url] ) return;
   docVisited[url] = true;
   fetcher ||= store.fetcher;
@@ -17,8 +23,31 @@ async function doLoad(url,fetcher){
       withCredentials:false,
     });
     return true;
+  }catch(e){
+console.log(777,e.status)
+    if(e.status==401) return false;
+    if(e.status==404) return false;
   }
-  catch(e){ console.log('fetch-error: ',url,e); return false; }
+  let response;
+  try {
+    response = await fetcher.webOperation( 'GET', proxy+url, {
+      headers: {accept:'text/turtle,application/ld+json'},
+      withCredentials:false,
+    });
+  } catch(e){ return false } // fetch error
+  if(response && response.responseText){
+    try {
+      const cType = response.headers.get('Content-type');
+      if(cType.match(/text\/turtle/)) {
+        parse(response.responseText, store, url, 'text/turtle');
+      }
+      else if(cType.match(/application\/ld+json/)) {
+        parse(response.responseText, store, url, 'application/ld+json');
+      }
+      return true;
+    }catch(e){ return false; } // parse error
+  }
+  else { return false; } // no responseText
 }
 export async function loadProfile(webid){
   let loggedIn = authn.currentUser();
